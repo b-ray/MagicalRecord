@@ -201,11 +201,16 @@ static NSUInteger kMagicalRecordDefaultBatchSize = 20;
             return nil;
         }
         
-        __block id obj = nil;
-        [context performBlockAndWait:^{
-            obj = [[self alloc] initWithEntity:entity insertIntoManagedObjectContext:context];
-        }];
-        return obj;
+        if (context == nil)
+        {
+            return [[self alloc] initWithEntity:entity insertIntoManagedObjectContext:context];
+        } else {
+            __block id obj = nil;
+            [context performBlockAndWait:^{
+                obj = [[self alloc] initWithEntity:entity insertIntoManagedObjectContext:context];
+            }];
+            return obj;
+        }
     }
 }
 
